@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1001",
+    "givenName": "Irish",
+    "surname": "Go",
+    "barcode": "1001",
+    "checkedInTime": null,
+    "checkedOutTime": null
+  },
+  {
+    "id": "1002",
+    "givenName": "Bench",
+    "surname": "Alegado",
+    "barcode": "1002",
+    "checkedInTime": null,
+    "checkedOutTime": null
+  }
+]

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance System</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-qrcode"></i>
+        <h1>Attendance System</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/" class="active">Home</a></li>
+          <li><a href="/student-list">Student List</a></li>
+          <li><a href="/barcode-generator">Generate Barcodes</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <div class="hero">
+        <h2>Student Attendance Tracking</h2>
+        <p>Scan a barcode to check in or check out a student</p>
+        <button id="scan-button" class="btn primary-btn">
+          <i class="fas fa-barcode"></i> Scan Barcode
+        </button>
+      </div>
+
+      <div class="status-card">
+        <h3>Recent Activity</h3>
+        <div class="recent-activity" id="recent-activity">
+          <p>No recent activity</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modal for barcode scanning -->
+    <div id="scan-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Scan Barcode</h2>
+        <div class="scan-input">
+          <input type="text" id="barcode-input" placeholder="Enter barcode or scan...">
+          <button id="submit-barcode" class="btn primary-btn">Submit</button>
+        </div>
+        <div class="scan-result" id="scan-result"></div>
+      </div>
+    </div>
+
+    <!-- Modal for student details -->
+    <div id="student-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-student">&times;</span>
+        <h2>Student Information</h2>
+        <div id="student-details" class="student-details">
+          <!-- Student details will be populated here -->
+        </div>
+        <div class="action-buttons">
+          <button id="check-in-btn" class="btn primary-btn">Check In</button>
+          <button id="check-out-btn" class="btn secondary-btn">Check Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
+

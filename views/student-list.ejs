@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student List - Attendance System</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-qrcode"></i>
+        <h1>Attendance System</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/student-list" class="active">Student List</a></li>
+          <li><a href="/barcode-generator">Generate Barcodes</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <div class="page-header">
+        <h2>Student Status</h2>
+        <div class="header-actions">
+          <button id="download-excel" class="btn secondary-btn">
+            <i class="fas fa-file-excel"></i> Download Excel
+          </button>
+          <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search students...">
+            <button id="search-btn" class="btn">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table id="student-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Check-In Time</th>
+              <th>Check-Out Time</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (students && students.length > 0) { %>
+              <% students.forEach(student => { %>
+                <tr data-id="<%= student.id %>">
+                  <td><%= student.id %></td>
+                  <td><%= student.givenName %> <%= student.surname %></td>
+                  <td class="check-in-time"><%= student.checkedInTime || 'Not checked in' %></td>
+                  <td class="check-out-time"><%= student.checkedOutTime || 'Not checked out' %></td>
+                  <td class="status">
+                    <% if (student.checkedInTime && student.checkedOutTime) { %>
+                      <span class="status-complete">Complete</span>
+                    <% } else if (student.checkedInTime) { %>
+                      <span class="status-in">Checked In</span>
+                    <% } else { %>
+                      <span class="status-absent">Absent</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <button class="btn small reset-btn" data-id="<%= student.id %>">
+                      <i class="fas fa-redo"></i> Reset
+                    </button>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="6">No students found</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-confirm">&times;</span>
+        <h2>Confirm Reset</h2>
+        <p>Are you sure you want to reset this student's attendance status?</p>
+        <div class="action-buttons">
+          <button id="confirm-reset" class="btn primary-btn">Confirm</button>
+          <button id="cancel-reset" class="btn secondary-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
+

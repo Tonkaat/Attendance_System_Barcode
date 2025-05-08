@@ -397,6 +397,39 @@
     background-color: var(--background);
     border-radius: var(--border-radius);
   }
+
+  /* Add these styles to your existing CSS file */
+
+/* Warning button style for Reset All */
+.warning-btn {
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.warning-btn:hover {
+  background-color: #e68a00;
+}
+
+/* Add some margin between the Reset All and Download Excel buttons */
+#reset-all-btn {
+  margin-right: 10px;
+}
+
+/* Styling for the Reset All modal */
+#reset-all-modal .modal-content {
+  border-top: 4px solid #ff9800;
+}
+
+/* Make the button container more flexible for mobile views */
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
   
   /* Responsive Styles */
   @media (max-width: 768px) {
@@ -434,4 +467,6 @@
       width: 95%;
       margin: 5% auto;
     }
+
+    
   }

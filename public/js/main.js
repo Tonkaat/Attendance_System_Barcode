@@ -261,118 +261,189 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Student List page functionality (student-list.ejs)
-  function initializeStudentListPage() {
-    console.log('Student List page initialized');
-    
-    const downloadExcelBtn = document.getElementById('download-excel');
-    const searchInput = document.getElementById('search-input');
-    const searchBtn = document.getElementById('search-btn');
-    const resetButtons = document.querySelectorAll('.reset-btn');
-    const confirmModal = document.getElementById('confirm-modal');
-    const closeConfirmButton = document.querySelector('.close-confirm');
-    const confirmResetBtn = document.getElementById('confirm-reset');
-    const cancelResetBtn = document.getElementById('cancel-reset');
-    
-    let studentIdToReset = null;
-    
-    // Download Excel file
-    downloadExcelBtn.addEventListener('click', function() {
-      window.location.href = '/api/download-excel';
-    });
-    
-    // Search functionality
-    searchBtn.addEventListener('click', function() {
+// Student List page functionality (student-list.ejs)
+function initializeStudentListPage() {
+  console.log('Student List page initialized');
+ 
+  const downloadExcelBtn = document.getElementById('download-excel');
+  const searchInput = document.getElementById('search-input');
+  const searchBtn = document.getElementById('search-btn');
+  const resetButtons = document.querySelectorAll('.reset-btn');
+  const resetAllBtn = document.getElementById('reset-all-btn');
+  
+  // Individual reset modal elements
+  const confirmModal = document.getElementById('confirm-modal');
+  const closeConfirmButton = document.querySelector('.close-confirm');
+  const confirmResetBtn = document.getElementById('confirm-reset');
+  const cancelResetBtn = document.getElementById('cancel-reset');
+  const confirmMessage = document.getElementById('confirm-message');
+  
+  // Reset all modal elements
+  const resetAllModal = document.getElementById('reset-all-modal');
+  const closeResetAllButton = document.querySelector('.close-reset-all');
+  const confirmResetAllBtn = document.getElementById('confirm-reset-all');
+  const cancelResetAllBtn = document.getElementById('cancel-reset-all');
+ 
+  let studentIdToReset = null;
+  let isResetAll = false;
+ 
+  // Download Excel file
+  downloadExcelBtn.addEventListener('click', function() {
+    window.location.href = '/api/download-excel';
+  });
+ 
+  // Search functionality
+  searchBtn.addEventListener('click', function() {
+    filterTable();
+  });
+ 
+  searchInput.addEventListener('keyup', function(event) {
+    if (event.key === 'Enter') {
       filterTable();
-    });
-    
-    searchInput.addEventListener('keyup', function(event) {
-      if (event.key === 'Enter') {
-        filterTable();
-      }
-    });
-    
-    // Filter table based on search input
-    function filterTable() {
-      const searchText = searchInput.value.toLowerCase();
-      const rows = document.querySelectorAll('#student-table tbody tr');
-      
-      rows.forEach(row => {
-        const id = row.querySelector('td:first-child').textContent.toLowerCase();
-        const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-        
-        if (id.includes(searchText) || name.includes(searchText)) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
-      });
     }
-    
-    // Reset button click event
-    resetButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        studentIdToReset = this.getAttribute('data-id');
-        confirmModal.style.display = 'block';
-      });
-    });
-    
-    // Close confirm modal when the close button is clicked
-    closeConfirmButton.addEventListener('click', function() {
-      confirmModal.style.display = 'none';
-    });
-    
-    // Close confirm modal when clicking outside
-    window.addEventListener('click', function(event) {
-      if (event.target === confirmModal) {
-        confirmModal.style.display = 'none';
+  });
+ 
+  // Filter table based on search input
+  function filterTable() {
+    const searchText = searchInput.value.toLowerCase();
+    const rows = document.querySelectorAll('#student-table tbody tr');
+   
+    rows.forEach(row => {
+      const id = row.querySelector('td:first-child').textContent.toLowerCase();
+      const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+     
+      if (id.includes(searchText) || name.includes(searchText)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
       }
-    });
-    
-    // Cancel reset
-    cancelResetBtn.addEventListener('click', function() {
-      confirmModal.style.display = 'none';
-      studentIdToReset = null;
-    });
-    
-    // Confirm reset
-    confirmResetBtn.addEventListener('click', function() {
-      if (!studentIdToReset) return;
-      
-      fetch('/api/reset-status', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: studentIdToReset }),
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            // Update the table
-            const row = document.querySelector(`tr[data-id="${studentIdToReset}"]`);
-            if (row) {
-              row.querySelector('.check-in-time').textContent = 'Not checked in';
-              row.querySelector('.check-out-time').textContent = 'Not checked out';
-              row.querySelector('.status').innerHTML = '<span class="status-absent">Absent</span>';
-            }
-            
-            // Close the confirm modal
-            confirmModal.style.display = 'none';
-            studentIdToReset = null;
-            
-            // Show success message
-            alert('Student status reset successfully');
-          } else {
-            alert('Failed to reset student status: ' + data.message);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('An error occurred while resetting student status');
-        });
     });
   }
+ 
+  // Individual Reset button click event
+  resetButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      studentIdToReset = this.getAttribute('data-id');
+      isResetAll = false;
+      confirmMessage.textContent = 'Are you sure you want to reset this student\'s attendance status?';
+      confirmModal.style.display = 'block';
+    });
+  });
+  
+  // Reset All button click event
+  resetAllBtn.addEventListener('click', function() {
+    resetAllModal.style.display = 'block';
+  });
+ 
+  // Close individual confirm modal when the close button is clicked
+  closeConfirmButton.addEventListener('click', function() {
+    confirmModal.style.display = 'none';
+  });
+  
+  // Close reset all modal when the close button is clicked
+  closeResetAllButton.addEventListener('click', function() {
+    resetAllModal.style.display = 'none';
+  });
+ 
+  // Close modals when clicking outside
+  window.addEventListener('click', function(event) {
+    if (event.target === confirmModal) {
+      confirmModal.style.display = 'none';
+    }
+    if (event.target === resetAllModal) {
+      resetAllModal.style.display = 'none';
+    }
+  });
+ 
+  // Cancel reset for individual student
+  cancelResetBtn.addEventListener('click', function() {
+    confirmModal.style.display = 'none';
+    studentIdToReset = null;
+  });
+  
+  // Cancel reset all
+  cancelResetAllBtn.addEventListener('click', function() {
+    resetAllModal.style.display = 'none';
+  });
+ 
+  // Confirm reset for individual student
+  confirmResetBtn.addEventListener('click', function() {
+    if (!studentIdToReset) return;
+   
+    fetch('/api/reset-status', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: studentIdToReset }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Update the table for individual student
+          updateStudentRow(studentIdToReset);
+         
+          // Close the confirm modal
+          confirmModal.style.display = 'none';
+          studentIdToReset = null;
+         
+          // Show success message
+          alert('Student status reset successfully');
+        } else {
+          alert('Failed to reset student status: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while resetting student status');
+      });
+  });
+  
+  // Confirm reset all
+  confirmResetAllBtn.addEventListener('click', function() {
+    fetch('/api/reset-all-status', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Update all rows in the table
+          const rows = document.querySelectorAll('#student-table tbody tr');
+          rows.forEach(row => {
+            const studentId = row.getAttribute('data-id');
+            if (studentId) {
+              updateStudentRow(studentId);
+            }
+          });
+          
+          // Close the reset all modal
+          resetAllModal.style.display = 'none';
+          
+          // Show success message
+          alert('All student statuses reset successfully');
+        } else {
+          alert('Failed to reset all student statuses: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while resetting all student statuses');
+      });
+  });
+  
+  // Helper function to update a student row in the table
+  function updateStudentRow(studentId) {
+    const row = document.querySelector(`tr[data-id="${studentId}"]`);
+    if (row) {
+      row.querySelector('.check-in-time').textContent = 'Not checked in';
+      row.querySelector('.check-out-time').textContent = 'Not checked out';
+      row.querySelector('.status').innerHTML = '<span class="status-absent">Absent</span>';
+    }
+  }
+}
   
   // Barcode Generator page functionality (barcode-generator.ejs)
   function initializeBarcodeGeneratorPage() {

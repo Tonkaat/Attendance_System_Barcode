@@ -190,6 +190,40 @@ app.post('/api/reset-status', (req, res) => {
   });
 });
 
+/**
+ * Reset all students' statuses endpoint
+ */
+app.post('/api/reset-all-status', (req, res) => {
+  try {
+    const students = getStudents();
+    
+    // Reset check-in and check-out times for all students
+    students.forEach(student => {
+      student.checkedInTime = null;
+      student.checkedOutTime = null;
+    });
+    
+    // Save the updated student data
+    if (saveStudents(students)) {
+      return res.json({
+        success: true,
+        message: 'All student statuses reset successfully'
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to reset student statuses'
+      });
+    }
+  } catch (error) {
+    console.error('Error resetting all student statuses:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+});
+
 // Generate and download Excel file
 app.get('/api/download-excel', (req, res) => {
   const students = getStudents();

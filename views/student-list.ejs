@@ -22,11 +22,13 @@
         </ul>
       </nav>
     </header>
-
     <main>
       <div class="page-header">
         <h2>Student Status</h2>
         <div class="header-actions">
+          <button id="reset-all-btn" class="btn warning-btn">
+            <i class="fas fa-redo"></i> Reset All
+          </button>
           <button id="download-excel" class="btn secondary-btn">
             <i class="fas fa-file-excel"></i> Download Excel
           </button>
@@ -38,7 +40,6 @@
           </div>
         </div>
       </div>
-
       <div class="table-container">
         <table id="student-table">
           <thead>
@@ -84,22 +85,32 @@
         </table>
       </div>
     </main>
-
     <!-- Confirmation Modal -->
     <div id="confirm-modal" class="modal">
       <div class="modal-content">
         <span class="close-confirm">&times;</span>
         <h2>Confirm Reset</h2>
-        <p>Are you sure you want to reset this student's attendance status?</p>
+        <p id="confirm-message">Are you sure you want to reset this student's attendance status?</p>
         <div class="action-buttons">
           <button id="confirm-reset" class="btn primary-btn">Confirm</button>
           <button id="cancel-reset" class="btn secondary-btn">Cancel</button>
         </div>
       </div>
     </div>
+    
+    <!-- Reset All Confirmation Modal -->
+    <div id="reset-all-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-reset-all">&times;</span>
+        <h2>Confirm Reset All</h2>
+        <p>Are you sure you want to reset ALL students' attendance status? This action cannot be undone.</p>
+        <div class="action-buttons">
+          <button id="confirm-reset-all" class="btn warning-btn">Confirm</button>
+          <button id="cancel-reset-all" class="btn secondary-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
   </div>
-
   <script src="/js/main.js"></script>
 </body>
 </html>
-
